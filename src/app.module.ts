@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import configuration from './config/configuration';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { CompaniesModule } from './companies/companies.module';
 import { IngestionModule } from './ingestion/ingestion.module';
 
@@ -19,7 +17,5 @@ import { IngestionModule } from './ingestion/ingestion.module';
     CompaniesModule,
     IngestionModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

@@ -1,0 +1,37 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: kkr-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: kkr-portfolio
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kkr-app
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/kkr-portfolio
+      KKR_API_BASE_URL: https://www.kkr.com/bin/rp/query
+      KKR_RATE_LIMIT_MS: 1000
+      KKR_REQUEST_TIMEOUT_MS: 10000
+    command: node dist/main.js ingest
+    # To query instead: command: node dist/main.js query --format json
+
+volumes:
+  mongodb_data:
+    driver: local
