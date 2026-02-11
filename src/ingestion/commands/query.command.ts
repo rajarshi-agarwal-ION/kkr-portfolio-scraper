@@ -9,10 +9,13 @@ export class QueryCommand extends CommandRunner {
     super();
   }
 
-  async run(_: string[], options: QueryCompaniesDto & { format?: OutputFormat }): Promise<void> {
-    const companies = await this.repository.find(options);
+  async run(passedParams: string[], options: QueryCompaniesDto & { format?: OutputFormat }): Promise<void> {
+    // Fallback for npm run dropping flag names: accept positional [region, format]
+    const effectiveRegion = options.region || passedParams[0];
+    const effectiveFormat = options.format || (passedParams[1] as OutputFormat) || 'table';
+    const companies = await this.repository.find({ ...options, region: effectiveRegion });
 
-    if ((options.format || 'table') === 'json') {
+    if (effectiveFormat === 'json') {
       console.log(JSON.stringify(companies, null, 2));
       return;
     }
