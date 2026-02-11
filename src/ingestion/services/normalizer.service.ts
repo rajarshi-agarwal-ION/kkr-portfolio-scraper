@@ -6,14 +6,16 @@ import { RawCompany } from './kkr-client.service';
 @Injectable()
 export class NormalizerService {
   normalize(raw: RawCompany): Company {
+    const cleanRegion = this.cleanString(raw.region);
+    const cleanIndustry = this.cleanString(raw.industry);
     return {
-      name: raw.name,
+      name: this.cleanString(raw.name) || raw.name,
       slug: slugify(raw.sortingName || raw.name, { lower: true, strict: true }),
       assetClasses: this.splitAssetClasses(raw.assetClass),
-      industry: raw.industry,
-      region: raw.region,
+      industry: cleanIndustry,
+      region: cleanRegion,
       yearOfInvestment: raw.yoi,
-      headquarters: raw.hq,
+      headquarters: this.cleanString(raw.hq),
       description: this.stripHtml(raw.description),
       website: raw.url || undefined,
       logoPath: raw.logo,
@@ -36,5 +38,11 @@ export class NormalizerService {
   private stripHtml(html?: string): string | undefined {
     if (!html) return undefined;
     return html.replace(/<[^>]*>/g, '').trim() || undefined;
+  }
+
+  private cleanString(value?: string): string | undefined {
+    if (!value) return undefined;
+    const trimmed = value.trim();
+    return trimmed.length ? trimmed : undefined;
   }
 }
