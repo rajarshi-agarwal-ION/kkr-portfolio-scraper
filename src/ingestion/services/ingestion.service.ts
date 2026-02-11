@@ -30,11 +30,16 @@ export class IngestionService {
         }
       } catch (error) {
         failed += 1;
-        this.logger.error(`Failed to process company ${raw.name}`, error as Error);
+        this.logger.error(
+          `Failed to process company ${raw.name}`,
+          error as Error,
+        );
       }
     }
 
-    this.logger.log(`Ingestion complete. processed=${processed} failed=${failed}`);
+    this.logger.log(
+      `Ingestion complete. processed=${processed} failed=${failed}`,
+    );
     return { processed, failed };
   }
 }

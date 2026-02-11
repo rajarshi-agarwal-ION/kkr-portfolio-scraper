@@ -37,8 +37,10 @@ export class KkrClientService {
     this.apiUrl =
       this.configService.get<string>('kkr.apiBaseUrl') ||
       'https://www.kkr.com/content/kkr/sites/global/en/invest/portfolio/jcr:content/root/main-par/bioportfoliosearch.bioportfoliosearch.json';
-    this.rateLimitMs = this.configService.get<number>('kkr.rateLimitMs') || 1000;
-    this.requestTimeout = this.configService.get<number>('kkr.requestTimeout') || 10000;
+    this.rateLimitMs =
+      this.configService.get<number>('kkr.rateLimitMs') || 1000;
+    this.requestTimeout =
+      this.configService.get<number>('kkr.requestTimeout') || 10000;
 
     this.client = axios.create({ timeout: this.requestTimeout });
   }
@@ -76,7 +78,9 @@ export class KkrClientService {
       allCompanies.push(...pageData.results);
     }
 
-    this.logger.log(`Fetched ${allCompanies.length} companies across ${firstPage.pages} pages`);
+    this.logger.log(
+      `Fetched ${allCompanies.length} companies across ${firstPage.pages} pages`,
+    );
     return allCompanies;
   }
 

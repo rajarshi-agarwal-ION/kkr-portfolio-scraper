@@ -8,7 +8,13 @@ import { NormalizerService } from './services/normalizer.service';
 
 @Module({
   imports: [CompaniesModule],
-  providers: [KkrClientService, NormalizerService, IngestionService, IngestCommand, QueryCommand],
+  providers: [
+    KkrClientService,
+    NormalizerService,
+    IngestionService,
+    IngestCommand,
+    QueryCommand,
+  ],
   exports: [IngestionService],
 })
 export class IngestionModule {}
