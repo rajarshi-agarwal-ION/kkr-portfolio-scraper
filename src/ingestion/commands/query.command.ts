@@ -4,6 +4,7 @@ import {
   CompanyRepository,
   QueryCompaniesDto,
 } from '../../companies/repositories/company.repository';
+import { Company } from '../../companies/schemas/company.schema';
 
 type OutputFormat = 'table' | 'json';
 
@@ -18,10 +19,7 @@ export class QueryCommand extends CommandRunner {
     super();
   }
 
-  async run(
-    _passedParams: string[],
-    options: QueryOptions,
-  ): Promise<void> {
+  async run(_passedParams: string[], options: QueryOptions): Promise<void> {
     const companies = await this.repository.find({
       assetClass: options.assetClass,
       industry: options.industry,
@@ -41,16 +39,16 @@ export class QueryCommand extends CommandRunner {
     }
   }
 
-  private formatOutput(companies: any[], format: OutputFormat): string {
+  private formatOutput(companies: Company[], format: OutputFormat): string {
     if (format === 'json') {
       return JSON.stringify(companies, null, 2);
     }
 
     const rows = companies.map((c) => ({
       Name: c.name,
-      'Asset Class': c.assetClasses?.join(', '),
-      Industry: c.industry,
-      Region: c.region,
+      'Asset Class': c.assetClasses?.join(', ') ?? '',
+      Industry: c.industry ?? '',
+      Region: c.region ?? '',
     }));
 
     if (rows.length === 0) {
@@ -58,10 +56,10 @@ export class QueryCommand extends CommandRunner {
     }
 
     // Simple table formatting for file output
-    const headers = Object.keys(rows[0]);
+    const headers = Object.keys(rows[0]) as Array<keyof (typeof rows)[0]>;
     const lines = [
       headers.join('\t'),
-      ...rows.map((r) => headers.map((h) => r[h] || '').join('\t')),
+      ...rows.map((r) => headers.map((h) => r[h]).join('\t')),
     ];
     return lines.join('\n');
   }

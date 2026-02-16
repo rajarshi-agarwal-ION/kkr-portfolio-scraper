@@ -11,7 +11,8 @@ export interface QueryCompaniesDto {
   skip?: number;
 }
 
-const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const escapeRegex = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 @Injectable()
 export class CompanyRepository {
@@ -31,13 +32,22 @@ export class CompanyRepository {
   async find(filters: QueryCompaniesDto): Promise<Company[]> {
     const query: Record<string, unknown> = {};
     if (filters.assetClass) {
-      query.assetClasses = { $regex: `^${escapeRegex(filters.assetClass)}$`, $options: 'i' };
+      query.assetClasses = {
+        $regex: `^${escapeRegex(filters.assetClass)}$`,
+        $options: 'i',
+      };
     }
     if (filters.industry) {
-      query.industry = { $regex: `^${escapeRegex(filters.industry)}$`, $options: 'i' };
+      query.industry = {
+        $regex: `^${escapeRegex(filters.industry)}$`,
+        $options: 'i',
+      };
     }
     if (filters.region) {
-      query.region = { $regex: `^${escapeRegex(filters.region)}$`, $options: 'i' };
+      query.region = {
+        $regex: `^${escapeRegex(filters.region)}$`,
+        $options: 'i',
+      };
     }
 
     const limit = filters.limit && filters.limit > 0 ? filters.limit : 20;
@@ -49,13 +59,22 @@ export class CompanyRepository {
   async count(filters: QueryCompaniesDto): Promise<number> {
     const query: Record<string, unknown> = {};
     if (filters.assetClass) {
-      query.assetClasses = { $regex: `^${escapeRegex(filters.assetClass)}$`, $options: 'i' };
+      query.assetClasses = {
+        $regex: `^${escapeRegex(filters.assetClass)}$`,
+        $options: 'i',
+      };
     }
     if (filters.industry) {
-      query.industry = { $regex: `^${escapeRegex(filters.industry)}$`, $options: 'i' };
+      query.industry = {
+        $regex: `^${escapeRegex(filters.industry)}$`,
+        $options: 'i',
+      };
     }
     if (filters.region) {
-      query.region = { $regex: `^${escapeRegex(filters.region)}$`, $options: 'i' };
+      query.region = {
+        $regex: `^${escapeRegex(filters.region)}$`,
+        $options: 'i',
+      };
     }
 
     return this.model.countDocuments(query).exec();
