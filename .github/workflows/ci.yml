@@ -36,9 +36,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
+      - name: Clear npm cache (workaround for npm ci issues)
+        run: npm cache clean --force
+
       - name: Install dependencies
-        run: |
-          npm ci --legacy-peer-deps || npm ci --legacy-peer-deps || npm ci
+        run: npm ci || npm install
         timeout-minutes: 5
 
       - name: Run linter (check mode)
