@@ -1,5 +1,9 @@
 # KKR Portfolio Scraper
 
+[![CI](https://github.com/rajarshi-agarwal-ION/kkr-portfolio-scraper/actions/workflows/ci.yml/badge.svg)](https://github.com/rajarshi-agarwal-ION/kkr-portfolio-scraper/actions/workflows/ci.yml)
+[![Docker Build](https://github.com/rajarshi-agarwal-ION/kkr-portfolio-scraper/actions/workflows/docker.yml/badge.svg)](https://github.com/rajarshi-agarwal-ION/kkr-portfolio-scraper/actions/workflows/docker.yml)
+[![CodeQL](https://github.com/rajarshi-agarwal-ION/kkr-portfolio-scraper/actions/workflows/codeql.yml/badge.svg)](https://github.com/rajarshi-agarwal-ION/kkr-portfolio-scraper/actions/workflows/codeql.yml)
+
 Production-ready NestJS application for scraping, storing, and querying KKR's portfolio companies from their public website.
 
 ## Overview
@@ -315,6 +319,55 @@ docker run --rm --network host kkr-portfolio-scraper node dist/main.js query --r
 
 **Note:** On Windows, use `--network="host"` or configure bridge networking to connect container to host MongoDB.
 
+### Pulling from GitHub Container Registry
+
+Pre-built images are automatically published via GitHub Actions:
+
+```bash
+# Pull latest image
+docker pull ghcr.io/rajarshi-agarwal-ion/kkr-portfolio-scraper:latest
+
+# Run with pre-built image
+docker run --rm --network host ghcr.io/rajarshi-agarwal-ion/kkr-portfolio-scraper:latest node dist/main.js query --format json
+```
+
+## CI/CD Pipeline
+
+This project includes automated GitHub Actions workflows:
+
+### 🧪 **CI Workflow** (`.github/workflows/ci.yml`)
+Runs on every push and pull request to `main` and `dev` branches:
+- **Linting**: ESLint checks for code quality
+- **Testing**: Jest unit tests with MongoDB service
+- **Coverage**: Generates test coverage reports
+- **Build**: Compiles TypeScript to validate production build
+- **Matrix Testing**: Tests on Node.js 20.x and 22.x
+
+### 🐳 **Docker Build & Push** (`.github/workflows/docker.yml`)
+Runs on push to `main` branch and version tags:
+- **Multi-platform**: Builds for AMD64 and ARM64
+- **GitHub Container Registry**: Pushes to `ghcr.io`
+- **Optional Docker Hub**: Configure with secrets
+- **Automated Tagging**: Semantic versioning from git tags
+- **Cache Optimization**: Uses GitHub Actions cache
+
+### 🔒 **CodeQL Security Scan** (`.github/workflows/codeql.yml`)
+Runs weekly and on pull requests:
+- **Security Analysis**: Scans for vulnerabilities
+- **Code Quality**: Identifies code smells
+- **Automated Alerts**: Security advisories in GitHub
+
+### Setup for Your Fork
+
+1. **Fork Repository**: Fork to your GitHub account
+2. **Enable Actions**: Go to Actions tab → Enable workflows
+3. **Optional Docker Hub**:
+   - Add `DOCKERHUB_USERNAME` secret
+   - Add `DOCKERHUB_TOKEN` secret
+4. **Optional Codecov**:
+   - Sign up at codecov.io
+   - Add `CODECOV_TOKEN` secret
+
 ## Troubleshooting
 
 ### How do I use the CLI?
@@ -386,10 +439,11 @@ docker run --rm --network host kkr-portfolio-scraper node dist/main.js query --r
 - Pagination support for large result sets
 
 ## Future Enhancements
-
-- [ ] Unit tests for normalizer/repository
+- [ ] E2E tests for CLI commands
 - [ ] Incremental updates (fetch only changed companies)
-- [ ] Export to CSV format
 - [ ] REST API endpoints for querying
+- [ ] Export to CSV format
 - [ ] Web UI for browsing portfolio
 - [ ] Company logo download and caching
+- [ ] Search by company name (fuzzy matching)
+- [ ] Deploy to cloud platform (Render/Railway/Heroku)
